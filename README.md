@@ -24,7 +24,13 @@ GTA YiceCity is an AI-assisted 3D scene generation and playable runtime project.
 </p>
 
 <p align="center">
-  <a href="https://youtu.be/CIWD4ODJzgs?si=Iv-pkZyjgrykkwln"><strong>Watch the demo on YouTube</strong></a>
+  <a href="https://youtu.be/CIWD4ODJzgs?si=Iv-pkZyjgrykkwln">
+    <img
+      src="https://img.youtube.com/vi/CIWD4ODJzgs/hqdefault.jpg"
+      alt="Watch the GTA YiceCity demo on YouTube"
+      width="920"
+    />
+  </a>
 </p>
 
 ## What this project does
