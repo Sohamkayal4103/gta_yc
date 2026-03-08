@@ -2,6 +2,31 @@
 
 GTA YiceCity is an AI-assisted 3D scene generation and playable runtime project.
 
+<p align="center">
+  <img src="README_assets/yc_front.png" alt="Front reference image used to generate the universe" width="31%" />
+  <img src="README_assets/yc_left.png" alt="Left reference image used to generate the universe" width="31%" />
+  <img src="README_assets/yc_right.png" alt="Right reference image used to generate the universe" width="31%" />
+</p>
+
+<p align="center">
+  <em>Reference images captured from the real space and used to generate the final universe.</em>
+</p>
+
+<p align="center">
+  <video src="README_assets/final_video.mp4" controls width="920">
+    Your Markdown viewer does not support embedded video. Open
+    <a href="README_assets/final_video.mp4">the MP4 demo</a>.
+  </video>
+</p>
+
+<p align="center">
+  <em>Final generated universe demo video.</em>
+</p>
+
+<p align="center">
+  <a href="https://youtu.be/CIWD4ODJzgs?si=Iv-pkZyjgrykkwln"><strong>Watch the demo on YouTube</strong></a>
+</p>
+
 ## What this project does
 
 1. Accepts video or live camera input.
