@@ -1,6 +1,6 @@
 # GTA Y(ice)C(ity)
 
-GTA YiceCity is an AI-assisted 3D scene generation and playable runtime project.
+Turn a normal Video into a Game. GTA YiceCity is an AI-assisted 3D game generation engine and playable runtime project.
 
 <p align="center">
   <img src="README_assets/yc_front.png" alt="Front reference image used to generate the universe" width="31%" />
