@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Office Main Character Mode</title>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    
+    <script>
+      // Component to handle Door opening/closing
+      AFRAME.registerComponent('door-listener', {
+        init: function () {
+          let open = false;
+          this.el.addEventListener('click', function (evt) {
+            if (!open) {
+              this.setAttribute('animation', 'property: rotation; to: 0 90 0; dur: 1000; easing: easeInOutQuad');
+              updateHUD("Door Opened.");
+            } else {
+              this.setAttribute('animation', 'property: rotation; to: 0 0 0; dur: 1000; easing: easeInOutQuad');
+              updateHUD("Door Closed.");
+            }
+            open = !open;
+          });
+        }
+      });
+
+      // Component to handle Microwave logic
+      AFRAME.registerComponent('microwave-listener', {
+        init: function () {
+          let on = false;
+          this.el.addEventListener('click', function (evt) {
+            let window = this.querySelector('#micro-window');
+            if (!on) {
+              window.setAttribute('color', 'orange'); // Cooking light
+              updateHUD("Microwave started... heating up lunch.");
+            } else {
+              window.setAttribute('color', '#111'); // Off
+              updateHUD("Microwave stopped.");
+            }
+            on = !on;
+          });
+        }
+      });
+
+      // Component for Whiteboard brainstorming
+      AFRAME.registerComponent('board-listener', {
+        init: function () {
+          this.el.addEventListener('click', function (evt) {
+            let text = document.querySelector('#board-text');
+            const ideas = ["Big Idea: AI Coffee", "Todo: Fix Bugs", "Do not erase!", "E=mc^2"];
+            let randomIdea = ideas[Math.floor(Math.random() * ideas.length)];
+            text.setAttribute('value', randomIdea);
+            updateHUD("You wrote '" + randomIdea + "' on the board.");
+          });
+        }
+      });
+
+      // Component for Light Switch
+      AFRAME.registerComponent('light-listener', {
+        init: function () {
+          let on = true;
+          this.el.addEventListener('click', function (evt) {
+            let roomLight = document.querySelector('#room-light');
+            if (on) {
+              roomLight.setAttribute('intensity', '0.1');
+              updateHUD("Lights OFF. Spooky.");
+            } else {
+              roomLight.setAttribute('intensity', '0.8');
+              updateHUD("Lights ON.");
+            }
+            on = !on;
+          });
+        }
+      });
+
+      // Simple HUD updater
+      function updateHUD(text) {
+        let hud = document.querySelector('#hud');
+        hud.setAttribute('value', text);
+      }
+    </script>
+  </head>
+  <body>
+    <a-scene>
+      <a-assets>
+        <img id="floor-tex" src="https://cdn.aframe.io/a-painter/images/floor.jpg">
+      </a-assets>
+
+      <a-entity position="0 1.6 0">
+        <a-camera look-controls wasd-controls>
+          <a-cursor color="yellow" fuse="false" timeout="500"></a-cursor>
+          <a-text id="hud" value="Welcome. Use Arrow Keys to Move. Click to Interact." position="0 -0.5 -1" align="center" width="2" color="white" shader="msdf" font="roboto"></a-text>
+        </a-camera>
+      </a-entity>
+
+      <a-plane position="0 0 0" rotation="-90 0 0" width="15" height="20" color="#777" material="src: #floor-tex; repeat: 8 8"></a-plane>
+      <a-plane position="0 3 0" rotation="90 0 0" width="15" height="20" color="#ddd"></a-plane>
+      
+      <a-box position="0 1.5 -10" width="15" height="3" depth="0.1" color="#fefefe"></a-box> <a-box position="0 1.5 10" width="15" height="3" depth="0.1" color="#fefefe"></a-box>  <a-box position="-7.5 1.5 0" width="0.1" height="3" depth="20" color="#fefefe"></a-box> <a-box position="7.5 1.5 0" width="0.1" height="3" depth="20" color="#fefefe"></a-box>  <a-entity id="room-light" light="type: ambient; color: #FFF; intensity: 0.8"></a-entity>
+
+      <a-entity position="-7.4 0 6"> 
+        <a-box class="clickable" door-listener position="0 1.1 0.5" width="0.1" height="2.2" depth="1" color="#8B4513"></a-box>
+        <a-sphere position="0.1 1.1 0.8" radius="0.05" color="silver"></a-sphere>
+      </a-entity>
+      
+      <a-box class="clickable" light-listener position="-7.4 1.4 5" width="0.05" height="0.2" depth="0.2" color="white">
+        <a-box position="0.03 0 0" width="0.02" height="0.08" depth="0.05" color="black"></a-box>
+      </a-box>
+
+      <a-box position="-7 0.6 4" width="0.6" height="1.2" depth="1" color="grey"></a-box>
+      <a-box class="clickable" microwave-listener position="-7 1.4 4" width="0.5" height="0.4" depth="0.4" color="white">
+        <a-plane id="micro-window" position="0.26 0 0" rotation="0 90 0" width="0.4" height="0.3" color="#111"></a-plane>
+      </a-box>
+
+      <a-plane class="clickable" board-listener position="0 1.6 9.9" rotation="0 180 0" width="6" height="1.5" color="white" material="shader: flat; border: 1px solid black">
+        <a-text id="board-text" value="Click me to brainstorm" color="black" align="center" position="0 0 0" width="6"></a-text>
+        <a-box position="0 -0.8 0.1" width="6" height="0.05" depth="0.1" color="silver"></a-box> </a-plane>
+
+      <a-cylinder position="4.5 0.75 5" radius="1.5" height="0.05" color="#ddd"></a-cylinder>
+      <a-cylinder position="4.5 0.375 5" radius="0.2" height="0.75" color="#555"></a-cylinder>
+      <a-cylinder position="3 0.5 5" radius="0.3" height="0.4" color="maroon"></a-cylinder> <a-cylinder position="6 0.5 5" radius="0.3" height="0.4" color="maroon"></a-cylinder> <a-box position="0 0.75 -4" width="0.1" height="1.5" depth="8" color="#dccfa4"></a-box>
+      <a-box position="-2 0.75 -4" width="2" height="0.05" depth="6" color="#eee"></a-box>
+      <a-box position="2 0.75 -4" width="2" height="0.05" depth="6" color="#eee"></a-box>
+      
+    </a-scene>
+  </body>
+</html>

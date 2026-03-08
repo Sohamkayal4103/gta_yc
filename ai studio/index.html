@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Universe Generator | Auto-Fallback</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
+    <style>
+        :root { 
+            --bg: #0d0d12; 
+            --text: #e2e2e2; 
+            --accent: #6b4cff; 
+            --accent-hover: #896dff;
+            --panel: #1a1a24; 
+            --border: #2a2a35;
+        }
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden;
+        }
+        
+        header { 
+            padding: 15px 25px; 
+            background: #121218; 
+            border-bottom: 1px solid var(--border); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        h1 { margin: 0; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+        .badge { background: rgba(107, 76, 255, 0.2); color: #a48fff; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; border: 1px solid var(--accent); }
+
+        .main-container { 
+            display: grid; 
+            grid-template-columns: 350px 1fr; 
+            height: calc(100vh - 65px); 
+        }
+        
+        /* Sidebar Styles */
+        .sidebar { 
+            background: var(--panel); 
+            padding: 25px; 
+            overflow-y: auto; 
+            border-right: 1px solid var(--border); 
+            display: flex; 
+            flex-direction: column; 
+            gap: 25px; 
+        }
+        
+        .section { display: flex; flex-direction: column; gap: 12px; }
+        .section-title { font-size: 0.8rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+        
+        .input-group { display: flex; flex-direction: column; gap: 6px; }
+        label { font-size: 0.9rem; font-weight: 500; color: #ccc; }
+        
+        input[type="password"] { 
+            background: #0d0d12; border: 1px solid var(--border); color: white; padding: 12px; border-radius: 8px; outline: none; transition: 0.2s; font-family: monospace;
+        }
+        input[type="password"]:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(107, 76, 255, 0.3); }
+
+        .file-upload { 
+            display: flex; align-items: center; background: #0d0d12; padding: 8px; border-radius: 8px; border: 1px dashed #444; transition: 0.2s; 
+        }
+        .file-upload:hover { border-color: var(--accent); background: #15151e; }
+        input[type="file"] { width: 100%; font-size: 0.8rem; cursor: pointer; color: #888; }
+        input[type="file"]::file-selector-button { 
+            background: #2a2a35; color: white; border: none; padding: 6px 12px; border-radius: 5px; margin-right: 12px; cursor: pointer; transition: 0.2s;
+        }
+        input[type="file"]::file-selector-button:hover { background: #3a3a45; }
+
+        button { 
+            background: var(--accent); color: white; border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1.05rem; transition: 0.2s; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+        button:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(107, 76, 255, 0.4); }
+        button:disabled { background: #333; color: #666; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* Terminal Console */
+        .terminal { 
+            font-family: 'Courier New', Courier, monospace; font-size: 0.75rem; color: #00ffcc; background: #050508; padding: 15px; border-radius: 8px; height: 160px; overflow-y: auto; border: 1px solid #222; white-space: pre-wrap; line-height: 1.4;
+        }
+
+        /* Preview Area */
+        .preview-container { background: #000; position: relative; display: flex; justify-content: center; align-items: center; }
+        iframe { width: 100%; height: 100%; border: none; display: none; }
+        
+        .placeholder { text-align: center; color: #555; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .placeholder svg { width: 80px; height: 80px; opacity: 0.3; }
+
+        /* Loader Animation */
+        .spinner { border: 4px solid rgba(255, 255, 255, 0.1); width: 24px; height: 24px; border-radius: 50%; border-left-color: #fff; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🌌 3D Universe Generator</h1>
+        <span class="badge">Engine: Dynamic Auto-Fallback</span>
+    </header>
+
+    <div class="main-container">
+        <div class="sidebar">
+            
+            <div class="section">
+                <div class="section-title">1. Authentication</div>
+                <div class="input-group">
+                    <label>Gemini API Key</label>
+                    <input type="password" id="apiKey" placeholder="AIzaSy...">
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">2. Spatial Data (Cube Map)</div>
+                <div class="input-group"><label>Front View</label><div class="file-upload"><input type="file" id="fileFront" accept="video/*"></div></div>
+                <div class="input-group"><label>Back View</label><div class="file-upload"><input type="file" id="fileBack" accept="video/*"></div></div>
+                <div class="input-group"><label>Left View</label><div class="file-upload"><input type="file" id="fileLeft" accept="video/*"></div></div>
+                <div class="input-group"><label>Right View</label><div class="file-upload"><input type="file" id="fileRight" accept="video/*"></div></div>
+                <div class="input-group"><label>Top View</label><div class="file-upload"><input type="file" id="fileTop" accept="video/*"></div></div>
+                <div class="input-group"><label>Bottom View</label><div class="file-upload"><input type="file" id="fileBottom" accept="video/*"></div></div>
+            </div>
+
+            <button id="generateBtn" onclick="generateUniverse()">
+                <div id="btnSpinner" class="spinner"></div>
+                <span id="btnText">Generate Universe</span>
+            </button>
+            
+            <div class="section" style="flex-grow: 1;">
+                <div class="section-title">System Console</div>
+                <div id="terminal" class="terminal">System initialized. Ready to process.</div>
+            </div>
+        </div>
+
+        <div class="preview-container">
+            <div id="placeholder" class="placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                <h2>Awaiting Generation</h2>
+                <p style="max-width: 300px; font-size: 0.9rem;">Upload 6 videos. We will automatically select the best available model to build your 3D world.</p>
+            </div>
+            <iframe id="resultFrame"></iframe>
+        </div>
+    </div>
+
+    <script type="module">
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+
+        // Terminal Logger Helper
+        window.log = (msg) => {
+            const el = document.getElementById('terminal');
+            const time = new Date().toLocaleTimeString();
+            el.innerText += `\n[${time}] > ${msg}`;
+            el.scrollTop = el.scrollHeight;
+        };
+
+        const SYSTEM_PROMPT = `
+        You are an expert 3D Web Developer and Spatial Analyst.
+        TASK: Reconstruct the room shown in the provided 6 videos (Front, Back, Left, Right, Top, Bottom) into an interactive 3D Web Universe using A-Frame.
+        
+        REQUIREMENTS:
+        1. Multimodal Analysis: Study the 6 videos to understand the room's precise dimensions, layout, furniture, clutter, lighting, colors, and any PEOPLE present.
+        2. Generate a SINGLE HTML file containing the complete A-Frame scene.
+        3. Accuracy: Place objects (desks, chairs, whiteboards, microwaves, trashcans, posters) exactly where they appear in the video relative to the center. Scale them appropriately based on standard floor/ceiling tiles.
+        4. HUMANS: If any people are visible in the videos, you MUST reconstruct them as humanoid figures using composed A-Frame primitives (capsule for torso, sphere for head, boxes for limbs). Match their approximate position, pose, clothing color, and height. Place them exactly where they stand/sit in the room.
+        
+        GAMEPLAY MECHANICS (GTA STYLE - 3rd Person):
+        - You MUST implement a 3rd Person Camera rig.
+        - You MUST include the following component logic to sync character rotation with camera look direction:
+        
+        <script>
+          AFRAME.registerComponent('sync-rotation', {
+            tick: function () {
+              var camera = this.el.querySelector('a-camera');
+              var mesh = this.el.querySelector('#avatar-mesh');
+              if (!camera || !mesh) return;
+              var camRot = camera.getAttribute('rotation');
+              // Rotate character body (Y-axis) to match camera
+              mesh.setAttribute('rotation', {x: 0, y: camRot.y, z: 0});
+            }
+          });
+        <\/script>
+
+        - Player Rig Structure MUST look exactly like this (avatar is a blue character):
+        <a-entity id="player-rig" movement-controls="speed: 0.15" position="0 0 0" sync-rotation>
+            <a-camera position="0 2.5 3.5" look-controls="pointerLockEnabled: true">
+                <a-cursor color="yellow" scale="0.5 0.5 0.5"></a-cursor>
+            </a-camera>
+            <a-entity id="avatar-mesh" position="0 1.6 0">
+                 <a-capsule radius="0.4" length="1.2" color="#0055ff"></a-capsule>
+                 <a-box position="0 0.5 0.35" width="0.45" height="0.15" depth="0.2" color="#222"></a-box>
+            </a-entity>
+        </a-entity>
+
+        - IMPORTS: You MUST include A-Frame (v1.6.0) and A-Frame Extras (v7.2.0):
+          <script src="https://aframe.io/releases/1.6.0/aframe.min.js"><\/script>
+          <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"><\/script>
+        
+        ENVIRONMENT: Apply a floor texture (like speckled linoleum), add drop-ceiling tiles, and accurately recreate the lighting fixtures overhead. Give the room a ceiling and 4 walls.
+
+        OUTPUT: Return ONLY the raw HTML code. Do NOT wrap it in markdown blockquotes (\`\`\`html). Start exactly with <!DOCTYPE html>.
+        `;
+
+        async function fileToGenerativePart(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve({
+                    inlineData: { data: reader.result.split(',')[1], mimeType: file.type },
+                });
+                reader.readAsDataURL(file);
+            });
+        }
+
+        window.generateUniverse = async function() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const files = [
+                document.getElementById('fileFront').files[0],
+                document.getElementById('fileBack').files[0],
+                document.getElementById('fileLeft').files[0],
+                document.getElementById('fileRight').files[0],
+                document.getElementById('fileTop').files[0],
+                document.getElementById('fileBottom').files[0],
+            ];
+
+            if (!apiKey) { log("ERROR: API Key is required."); return alert("Please enter your Gemini API Key."); }
+            if (files.some(f => !f)) { log("ERROR: Missing video inputs."); return alert("Please upload all 6 perspectives."); }
+
+            // UI Loading States
+            const btn = document.getElementById('generateBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            
+            btn.disabled = true;
+            btnText.innerText = "Processing Universe...";
+            btnSpinner.style.display = "block";
+            
+            document.getElementById('terminal').innerHTML = ""; 
+            log("Initialization started.");
+
+            try {
+                const genAI = new GoogleGenerativeAI(apiKey);
+                
+                log("Encoding 6 raw videos into memory (This requires high browser RAM)...");
+                const videoParts = await Promise.all(files.map(fileToGenerativePart));
+                log("Video encoding complete.");
+
+                // AUTOMATIC FALLBACK CHAIN
+                const fallbackChain = [
+                    "gemini-3-pro-preview", 
+                    "gemini-2.5-pro", 
+                    "gemini-2.5-flash", 
+                    "gemini-2.0-flash"
+                ];
+
+                let code = null;
+                let successfulModel = null;
+
+                for (const modelName of fallbackChain) {
+                    try {
+                        log(`Attempting generation with model: [${modelName}]...`);
+                        const model = genAI.getGenerativeModel({ model: modelName });
+                        
+                        const result = await model.generateContent([SYSTEM_PROMPT, ...videoParts]);
+                        const response = await result.response;
+                        
+                        code = response.text();
+                        successfulModel = modelName;
+                        
+                        log(`✅ SUCCESS! Scene generated by ${successfulModel}`);
+                        break; // Exit the loop if successful
+
+                    } catch (err) {
+                        log(`⚠️ [${modelName}] failed: ${err.message}`);
+                        log(`Switching to next available fallback model...`);
+                    }
+                }
+
+                if (!code) {
+                    throw new Error("All models in the fallback chain failed (Network error or Google servers are down).");
+                }
+                
+                log("Compiling 3D environment...");
+                
+                // Clean markdown artifacts
+                code = code.replace(/```html\n?/g, '').replace(/```/g, '').trim();
+
+                log("Compilation successful! Launching Universe...");
+                
+                // Inject the generated scene
+                document.getElementById('placeholder').style.display = 'none';
+                const frame = document.getElementById('resultFrame');
+                frame.style.display = 'block';
+                frame.srcdoc = code;
+
+                log("Universe is LIVE. Click inside the viewport to capture your mouse and walk around using W,A,S,D.");
+                
+                btnText.innerText = "Regenerate Universe";
+
+            } catch (error) {
+                console.error(error);
+                log(`CRITICAL FAILURE: ${error.message}`);
+                alert(`Error: ${error.message}`);
+                btnText.innerText = "Generation Failed";
+            } finally {
+                btn.disabled = false;
+                btnSpinner.style.display = "none";
+            }
+        };
+    </script>
+</body>
+</html>

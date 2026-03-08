@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealmCast — 3D Universe Builder</title>
+    <link rel="stylesheet" href="/frontend/universe.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>RealmCast 3D</h1>
+            <p class="tagline">Record your room. Walk through it in 3D.</p>
+            <p class="subtitle">Upload 6 directional videos and we'll build a navigable 3D universe</p>
+        </header>
+
+        <!-- Upload Section -->
+        <div id="upload-section" class="section">
+            <div class="instructions">
+                <h3>How to record</h3>
+                <p>Stand in the exact center of your room. Record a short video (3-15 seconds) for each direction without moving your feet.</p>
+            </div>
+
+            <div class="direction-grid">
+                <div class="upload-card" data-direction="front">
+                    <div class="upload-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                    </div>
+                    <h3>Front</h3>
+                    <p>Look straight ahead</p>
+                    <input type="file" id="video-front" accept="video/*" capture="environment">
+                    <label for="video-front" class="upload-btn">Upload</label>
+                    <span class="filename" id="fname-front"></span>
+                    <span class="checkmark hidden">Uploaded</span>
+                </div>
+                <div class="upload-card" data-direction="back">
+                    <div class="upload-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                    </div>
+                    <h3>Back</h3>
+                    <p>Turn 180 degrees</p>
+                    <input type="file" id="video-back" accept="video/*" capture="environment">
+                    <label for="video-back" class="upload-btn">Upload</label>
+                    <span class="filename" id="fname-back"></span>
+                    <span class="checkmark hidden">Uploaded</span>
+                </div>
+                <div class="upload-card" data-direction="left">
+                    <div class="upload-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    </div>
+                    <h3>Left</h3>
+                    <p>Turn left from front</p>
+                    <input type="file" id="video-left" accept="video/*" capture="environment">
+                    <label for="video-left" class="upload-btn">Upload</label>
+                    <span class="filename" id="fname-left"></span>
+                    <span class="checkmark hidden">Uploaded</span>
+                </div>
+                <div class="upload-card" data-direction="right">
+                    <div class="upload-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
+                    <h3>Right</h3>
+                    <p>Turn right from front</p>
+                    <input type="file" id="video-right" accept="video/*" capture="environment">
+                    <label for="video-right" class="upload-btn">Upload</label>
+                    <span class="filename" id="fname-right"></span>
+                    <span class="checkmark hidden">Uploaded</span>
+                </div>
+                <div class="upload-card" data-direction="up">
+                    <div class="upload-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4"/></svg>
+                    </div>
+                    <h3>Up (Ceiling)</h3>
+                    <p>Look straight up</p>
+                    <input type="file" id="video-up" accept="video/*" capture="environment">
+                    <label for="video-up" class="upload-btn">Upload</label>
+                    <span class="filename" id="fname-up"></span>
+                    <span class="checkmark hidden">Uploaded</span>
+                </div>
+                <div class="upload-card" data-direction="down">
+                    <div class="upload-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4"/></svg>
+                    </div>
+                    <h3>Down (Floor)</h3>
+                    <p>Look straight down</p>
+                    <input type="file" id="video-down" accept="video/*" capture="environment">
+                    <label for="video-down" class="upload-btn">Upload</label>
+                    <span class="filename" id="fname-down"></span>
+                    <span class="checkmark hidden">Uploaded</span>
+                </div>
+            </div>
+
+            <div class="upload-counter">
+                <span id="upload-count">0</span> / 6 directions uploaded
+            </div>
+
+            <button type="button" id="generate-btn" class="generate-btn" disabled>
+                Build 3D Universe
+            </button>
+            <p id="upload-status" class="upload-status">Upload at least one direction to get started. All 6 for best results.</p>
+        </div>
+
+        <!-- Loading Section -->
+        <div id="loading-section" class="section hidden">
+            <div class="loading-container">
+                <div class="loading-orb">
+                    <div class="orb-inner"></div>
+                </div>
+                <h2 id="loading-title">Building Your Universe...</h2>
+                <p id="loading-stage" class="loading-stage">Initializing spatial analysis...</p>
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <p id="progress-text" class="progress-text">0%</p>
+            </div>
+        </div>
+
+        <!-- Ready Section -->
+        <div id="ready-section" class="section hidden">
+            <div class="ready-container">
+                <h2>Your 3D Universe is Ready!</h2>
+                <p class="ready-subtitle">Walk through your room in third person. WASD to move, mouse to look.</p>
+                <div class="link-box">
+                    <input type="text" id="universe-link" readonly>
+                    <button id="copy-btn" class="copy-btn">Copy</button>
+                </div>
+                <a id="enter-btn" href="#" class="enter-btn" target="_blank">Enter Universe</a>
+            </div>
+        </div>
+
+        <footer>
+            <a href="/" class="back-link">Switch to 2D Game Mode</a>
+        </footer>
+    </div>
+
+    <script src="/frontend/universe.js"></script>
+</body>
+</html>

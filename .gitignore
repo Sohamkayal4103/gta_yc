@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.env
+venv/
+node_modules/
+backend/static/games/*/
+*.mp4
+*.mov
+.DS_Store

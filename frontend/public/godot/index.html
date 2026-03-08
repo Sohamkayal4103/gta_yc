@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Godot Runtime Placeholder</title>
+    <style>
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: #ddd; font-family: system-ui, sans-serif; }
+      .wrap { display: grid; place-items: center; width: 100%; height: 100%; text-align: center; padding: 24px; box-sizing: border-box; }
+      code { background: #111; padding: 2px 6px; border-radius: 6px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div>
+        <h2>Godot Web export placeholder</h2>
+        <p>Replace this file with the real Godot 4 Web export (index.html + .wasm + .pck + .js files).</p>
+        <p>Expected host init message: <code>{ type: 'host:init', payload: { sessionId, sceneBundleUrl } }</code></p>
+      </div>
+    </div>
+
+    <script>
+      window.parent?.postMessage({ type: 'godot:ready' }, '*');
+
+      window.addEventListener('message', (event) => {
+        const data = event.data || {};
+        if (data.type === 'host:init') {
+          console.log('[godot-placeholder] init payload', data.payload);
+        }
+      });
+    </script>
+  </body>
+</html>

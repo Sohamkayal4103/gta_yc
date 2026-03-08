@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealmCast 3D Universe — {{SESSION_ID}}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; overflow: hidden; }
+        #universe-frame {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+        }
+        #loading-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: #0a0a0f;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        #loading-overlay h2 {
+            background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+        #loading-overlay p { color: #666; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div id="loading-overlay">
+        <h2>Loading Universe...</h2>
+        <p>Preparing your 3D environment</p>
+    </div>
+    <iframe id="universe-frame" class="hidden"></iframe>
+
+    <script>
+        (async function() {
+            const sessionId = '{{SESSION_ID}}';
+            const overlay = document.getElementById('loading-overlay');
+            const frame = document.getElementById('universe-frame');
+
+            try {
+                const res = await fetch(`/api/universe/${sessionId}/html`);
+                if (!res.ok) throw new Error('Universe not found');
+                const html = await res.text();
+
+                frame.srcdoc = html;
+                frame.classList.remove('hidden');
+
+                // Hide overlay once iframe loads
+                frame.addEventListener('load', () => {
+                    overlay.classList.add('hidden');
+                });
+            } catch (err) {
+                overlay.querySelector('h2').textContent = 'Error';
+                overlay.querySelector('p').textContent = err.message;
+            }
+        })();
+    </script>
+</body>
+</html>

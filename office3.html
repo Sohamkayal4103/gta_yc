@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Office GTA Style (3rd Person)</title>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+
+    <script>
+      // COMPONENT: Sync Rotation
+      // This forces the player body to rotate with the camera so you walk where you look
+      AFRAME.registerComponent('player-controls', {
+        tick: function () {
+          var camera = this.el.querySelector('a-camera');
+          var playerMesh = this.el.querySelector('#player-mesh');
+          
+          // Get camera rotation
+          var rot = camera.getAttribute('rotation');
+          
+          // Apply Y-rotation (turning left/right) to the player mesh
+          // We don't apply X (looking up/down) to the mesh so the character doesn't tilt into the floor
+          playerMesh.setAttribute('rotation', {x: 0, y: rot.y, z: 0});
+        }
+      });
+
+      // COMPONENT: Door Interaction
+      AFRAME.registerComponent('door-listener', {
+        init: function () {
+          let open = false;
+          this.el.addEventListener('click', function (evt) {
+            if (!open) {
+              this.setAttribute('animation', 'property: rotation; to: 0 90 0; dur: 1000;');
+            } else {
+              this.setAttribute('animation', 'property: rotation; to: 0 0 0; dur: 1000;');
+            }
+            open = !open;
+          });
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene>
+      <a-assets>
+        <img id="floor-tex" src="https://cdn.aframe.io/a-painter/images/floor.jpg">
+      </a-assets>
+
+      <a-entity id="player-rig" movement-controls="speed: 0.15" position="0 0 0" player-controls>
+        
+        <a-entity id="player-mesh" position="0 1.6 0">
+           <a-capsule radius="0.4" length="1.2" color="#0055ff" position="0 -0.6 0"></a-capsule>
+           <a-sphere radius="0.3" color="#ffccaa" position="0 0.4 0"></a-sphere>
+           <a-box color="#333" width="0.4" height="0.1" depth="0.2" position="0 0.45 -0.2"></a-box>
+        </a-entity>
+
+        <a-camera position="0 2.5 2.5" rotation="-15 0 0" look-controls="pointerLockEnabled: true">
+            <a-cursor color="yellow" position="0 0 -3" geometry="radius: 0.05"></a-cursor>
+        </a-camera>
+
+      </a-entity>
+
+      <a-plane position="0 0 0" rotation="-90 0 0" width="20" height="25" color="#777" material="src: #floor-tex; repeat: 8 8"></a-plane>
+      <a-plane position="0 4 0" rotation="90 0 0" width="20" height="25" color="#ddd"></a-plane>
+      
+      <a-box position="0 2 -10" width="20" height="4" depth="0.1" color="#fefefe"></a-box> <a-box position="0 2 10" width="20" height="4" depth="0.1" color="#fefefe"></a-box>  <a-box position="-10 2 0" width="0.1" height="4" depth="20" color="#fefefe"></a-box> <a-box position="10 2 0" width="0.1" height="4" depth="20" color="#fefefe"></a-box>  <a-entity light="type: ambient; color: #FFF; intensity: 0.7"></a-entity>
+      <a-entity light="type: point; intensity: 0.5; distance: 10" position="0 3 0"></a-entity>
+
+      <a-entity position="-9.9 0 6"> 
+        <a-box class="clickable" door-listener position="0 1.1 0" width="0.1" height="2.2" depth="1" color="#8B4513"></a-box>
+        <a-sphere position="0.1 1.1 0.3" radius="0.05" color="silver"></a-sphere>
+      </a-entity>
+      
+      <a-box position="-9 0.6 4" width="0.8" height="1.2" depth="1" color="grey"></a-box>
+      <a-box position="-9 1.4 4" width="0.6" height="0.4" depth="0.4" color="white">
+        <a-plane position="0.31 0 0" rotation="0 90 0" width="0.4" height="0.3" color="#111"></a-plane>
+      </a-box>
+
+      <a-plane position="0 2 9.9" rotation="0 180 0" width="8" height="2" color="white" material="shader: flat; border: 1px solid black">
+         <a-text value="Project Plan" color="black" align="center" position="0 0.5 0"></a-text>
+      </a-plane>
+
+      <a-cylinder position="5 0.75 5" radius="2" height="0.05" color="#ddd"></a-cylinder>
+      <a-cylinder position="5 0.375 5" radius="0.2" height="0.75" color="#555"></a-cylinder>
+      <a-cylinder position="3 0.5 5" radius="0.4" height="0.4" color="maroon"></a-cylinder>
+      <a-cylinder position="7 0.5 5" radius="0.4" height="0.4" color="maroon"></a-cylinder>
+
+      <a-box position="0 0.75 -4" width="0.1" height="1.5" depth="8" color="#dccfa4"></a-box> <a-box position="-2.5 0.75 -4" width="2.5" height="0.05" depth="6" color="#eee"></a-box> <a-box position="2.5 0.75 -4" width="2.5" height="0.05" depth="6" color="#eee"></a-box> </a-scene>
+  </body>
+</html>

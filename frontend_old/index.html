@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealmCast — Reality to Game Universe</title>
+    <link rel="stylesheet" href="/frontend/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>RealmCast</h1>
+            <p class="tagline">Record your world. Become the hero.</p>
+        </header>
+
+        <!-- Upload Form -->
+        <div id="upload-section" class="section">
+            <div class="direction-section">
+                <h3>Record Room Directions (stand at center)</h3>
+                <p class="direction-hint">Upload all 6 directions for best universe building.</p>
+                <div class="direction-grid">
+                    <div class="upload-card upload-card-small">
+                        <div class="upload-icon">⬆️</div>
+                        <h3>Front</h3>
+                        <input type="file" id="room-front-video" accept="video/*" capture="environment">
+                        <label for="room-front-video" class="upload-btn">Upload</label>
+                        <span id="room-front-filename" class="filename"></span>
+                    </div>
+                    <div class="upload-card upload-card-small">
+                        <div class="upload-icon">⬇️</div>
+                        <h3>Back</h3>
+                        <input type="file" id="room-back-video" accept="video/*" capture="environment">
+                        <label for="room-back-video" class="upload-btn">Upload</label>
+                        <span id="room-back-filename" class="filename"></span>
+                    </div>
+                    <div class="upload-card upload-card-small">
+                        <div class="upload-icon">⬅️</div>
+                        <h3>Left</h3>
+                        <input type="file" id="room-left-video" accept="video/*" capture="environment">
+                        <label for="room-left-video" class="upload-btn">Upload</label>
+                        <span id="room-left-filename" class="filename"></span>
+                    </div>
+                    <div class="upload-card upload-card-small">
+                        <div class="upload-icon">➡️</div>
+                        <h3>Right</h3>
+                        <input type="file" id="room-right-video" accept="video/*" capture="environment">
+                        <label for="room-right-video" class="upload-btn">Upload</label>
+                        <span id="room-right-filename" class="filename"></span>
+                    </div>
+                    <div class="upload-card upload-card-small">
+                        <div class="upload-icon">🔼</div>
+                        <h3>Up</h3>
+                        <input type="file" id="room-up-video" accept="video/*" capture="environment">
+                        <label for="room-up-video" class="upload-btn">Upload</label>
+                        <span id="room-up-filename" class="filename"></span>
+                    </div>
+                    <div class="upload-card upload-card-small">
+                        <div class="upload-icon">🔽</div>
+                        <h3>Down</h3>
+                        <input type="file" id="room-down-video" accept="video/*" capture="environment">
+                        <label for="room-down-video" class="upload-btn">Upload</label>
+                        <span id="room-down-filename" class="filename"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="upload-grid single-upload-grid">
+                <div class="upload-card">
+                    <div class="upload-icon">🏠</div>
+                    <h3>Legacy Single View (Optional)</h3>
+                    <p>If provided, used as front view fallback</p>
+                    <input type="file" id="room-video-legacy" accept="video/*" capture="environment">
+                    <label for="room-video-legacy" class="upload-btn">Choose Video</label>
+                    <span id="room-legacy-filename" class="filename"></span>
+                </div>
+                <div class="upload-card">
+                    <div class="upload-icon">🧑</div>
+                    <h3>Record Yourself</h3>
+                    <p>10-second selfie video</p>
+                    <input type="file" id="selfie-video" accept="video/*" capture="user">
+                    <label for="selfie-video" class="upload-btn">Choose Video</label>
+                    <span id="selfie-filename" class="filename"></span>
+                </div>
+            </div>
+
+            <div class="genre-section">
+                <h3>Choose Your Genre</h3>
+                <div class="genre-grid">
+                    <button type="button" class="genre-card" data-genre="fantasy">
+                        <div class="genre-icon">⚔️</div>
+                        <span>Fantasy RPG</span>
+                    </button>
+                    <button type="button" class="genre-card" data-genre="cyberpunk">
+                        <div class="genre-icon">🌃</div>
+                        <span>Cyberpunk</span>
+                    </button>
+                    <button type="button" class="genre-card" data-genre="horror">
+                        <div class="genre-icon">👻</div>
+                        <span>Horror Survival</span>
+                    </button>
+                </div>
+            </div>
+
+            <button type="button" id="generate-btn" class="generate-btn" disabled>Generate Your Universe</button>
+            <p id="upload-status" class="upload-status">
+                Select at least one room direction, one selfie video, and one genre.
+            </p>
+            <p style="text-align:center; margin-top: 20px;">
+                <a href="/3d" style="color: #00d4ff; text-decoration: none; font-size: 0.95rem;">
+                    Or try 3D Universe Mode &rarr;
+                </a>
+            </p>
+        </div>
+
+        <!-- Loading Section -->
+        <div id="loading-section" class="section hidden">
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <h2 id="loading-title">Generating Your Universe...</h2>
+                <p id="loading-stage" class="loading-stage">Initializing agents...</p>
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <p id="progress-text" class="progress-text">0%</p>
+            </div>
+        </div>
+
+        <!-- Ready Section -->
+        <div id="ready-section" class="section hidden">
+            <div class="ready-container">
+                <h2>Your Universe is Ready!</h2>
+                <p>Share this link with anyone:</p>
+                <div class="link-box">
+                    <input type="text" id="game-link" readonly>
+                    <button id="copy-btn" class="copy-btn">Copy</button>
+                </div>
+                <a id="play-btn" href="#" class="play-btn">Enter Your Universe</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/frontend/upload.js?v=20260304a"></script>
+</body>
+</html>

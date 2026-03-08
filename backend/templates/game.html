@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealmCast — {{GENRE}}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #000;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #game-container { position: relative; }
+        canvas { display: block; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+</head>
+<body>
+    <div id="game-container"></div>
+    <script>
+        window.SESSION_ID = "{{SESSION_ID}}";
+        window.GENRE = "{{GENRE}}";
+    </script>
+    <script src="/game/js/systems/MissionSystem.js"></script>
+    <script src="/game/js/scenes/BootScene.js"></script>
+    <script src="/game/js/scenes/MenuScene.js"></script>
+    <script src="/game/js/scenes/GameScene.js"></script>
+    <script src="/game/js/scenes/HUDScene.js"></script>
+    <script src="/game/js/config.js"></script>
+    <script>
+        const game = new Phaser.Game(gameConfig);
+    </script>
+</body>
+</html>
