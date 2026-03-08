@@ -1,4 +1,4 @@
-# GTA YiceCity
+# GTA Y(ice)C(ity)
 
 GTA YiceCity is an AI-assisted 3D scene generation and playable runtime project.
 
