@@ -12,32 +12,20 @@ GTA YiceCity is an AI-assisted 3D scene generation and playable runtime project.
   <em>Reference images captured from the real space and used to generate the final universe.</em>
 </p>
 
-<p align="center">
-  <video src="README_assets/final_video.mp4" controls width="920">
-    Your Markdown viewer does not support embedded video. Open
-    <a href="README_assets/final_video.mp4">the MP4 demo</a>.
+<div align="center">
+  <video width="920" controls preload="metadata" poster="./README_assets/final_video_poster.jpg">
+    <source src="./README_assets/final_video.mp4" type="video/mp4" />
   </video>
-</p>
+</div>
 
 <p align="center">
   <em>Final generated universe demo video.</em>
 </p>
 
 <p align="center">
-  <iframe
-    width="920"
-    height="518"
-    src="https://www.youtube-nocookie.com/embed/CIWD4ODJzgs"
-    title="GTA YiceCity YouTube Demo"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    referrerpolicy="strict-origin-when-cross-origin"
-    allowfullscreen
-  ></iframe>
-</p>
-
-<p align="center">
-  <em>If your Markdown viewer blocks embedded YouTube players, open the video directly on <a href="https://youtu.be/CIWD4ODJzgs?si=Iv-pkZyjgrykkwln">YouTube</a>.</em>
+  <a href="./README_assets/final_video.mp4"><strong>Open full-quality MP4</strong></a>
+  ·
+  <a href="https://youtu.be/CIWD4ODJzgs?si=Iv-pkZyjgrykkwln"><strong>Watch on YouTube</strong></a>
 </p>
 
 ## What this project does
