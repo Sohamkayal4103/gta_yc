@@ -12,18 +12,17 @@ GTA YiceCity is an AI-assisted 3D scene generation and playable runtime project.
   <em>Reference images captured from the real space and used to generate the final universe.</em>
 </p>
 
-<div align="center">
-  <video width="920" controls preload="metadata" poster="./README_assets/final_video_poster.jpg">
-    <source src="./README_assets/final_video.mp4" type="video/mp4" />
-  </video>
-</div>
-
 <p align="center">
-  <em>Final generated universe demo video.</em>
+  <img src="README_assets/final_img_1.png" alt="Final generated universe still one" width="49%" />
+  <img src="README_assets/final_img_2.jpg" alt="Final generated universe still two" width="49%" />
 </p>
 
 <p align="center">
-  <a href="./README_assets/final_video.mp4"><strong>Open full-quality MP4</strong></a>
+  <em>Final generated universe comparison stills from the runtime demo.</em>
+</p>
+
+<p align="center">
+  <a href="./README_assets/final_video.mp4"><strong>Open final demo video (MP4)</strong></a>
   ·
   <a href="https://youtu.be/CIWD4ODJzgs?si=Iv-pkZyjgrykkwln"><strong>Watch on YouTube</strong></a>
 </p>
